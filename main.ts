@@ -292,7 +292,7 @@ export default class ObsidianRewarder extends Plugin {
 
     let logRewardsText =
       (this.settings.saveRewardToDaily && logTaskOnly === false
-        ? "Earned reward: " +
+        ? this.settings.rewardPreface +
           chosenReward.rewardName
         : "");
 

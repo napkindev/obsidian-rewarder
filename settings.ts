@@ -24,6 +24,7 @@ export interface ObsidianRewarderSettings {
   saveTaskSectionHeading?: string;
   showModal: boolean;
   useAsInspirational: boolean;
+  rewardPreface: string;
 }
 
 export const DEFAULT_SETTINGS: ObsidianRewarderSettings = {
@@ -42,6 +43,7 @@ export const DEFAULT_SETTINGS: ObsidianRewarderSettings = {
   saveTaskSectionHeading: undefined,
   showModal: true,
   useAsInspirational: false,
+  rewardPreface: "- [ ] Earned reward: ",
 };
 
 import ObsidianRewarder from "./main"
@@ -141,6 +143,29 @@ export class ObsidianRewarderSettingsTab extends PluginSettingTab {
             this.display();
           })
       );
+
+    new Setting(containerEl)
+    .setName("Reward preface text")
+    .setDesc("The text that appears before each reward in the daily note")
+    .addText((text) =>
+      text
+        .setPlaceholder("- [ ] Earned reward: ")
+        .setValue(this.plugin.settings.rewardPreface)
+        .onChange(async (value) => {
+          this.plugin.settings.rewardPreface = value;
+          await this.plugin.saveSettings();
+        })
+    )
+    .addExtraButton((button) =>
+      button
+        .setIcon("reset")
+        .setTooltip("Restore default")
+        .onClick(async () => {
+          this.plugin.settings.rewardPreface = DEFAULT_SETTINGS.rewardPreface;
+          await this.plugin.saveSettings();
+          this.display();
+        })
+    );
 
     new Setting(this.containerEl)
       .setName("Save task in daily note")
